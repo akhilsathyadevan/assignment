@@ -11,12 +11,13 @@ async createTask(data: any){
     return task;   
 }
 
-async findAllTask(search: string):Promise<Task[]>{
-    const query = {};
-    if (search) {
-      query['taskStatus'] = { $regex: search, $options: 'i' }; 
-    }
-    return this.TaskModel.find(query).lean();
+async findAllTask(search: string, page: number = 1, limit: number = 10):Promise<Task[]>{
+  const query = {};
+  if (search) {
+    query['taskStatus'] = { $regex: search, $options: 'i' }; 
+  }
+  return this.TaskModel.find(query).lean().skip((page - 1) * limit)
+  .limit(limit);;
 }
 
 

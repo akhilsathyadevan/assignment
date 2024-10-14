@@ -4,8 +4,10 @@ import {
     UseInterceptors,
     UploadedFile,
     BadRequestException,
+    UseGuards,
   } from '@nestjs/common';
   import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from 'src/auth/auth.guard';
   // import { ChatService } from './chat.service';
   import * as XLSX from 'xlsx';
   
@@ -14,6 +16,7 @@ import {
     // constructor(private readonly chatService: ChatService) {}
   
     @Post('import')
+    @UseGuards(AuthGuard)
     @UseInterceptors(FileInterceptor('file'))
     async importChat(@UploadedFile() file: any) {
       if (!file) {

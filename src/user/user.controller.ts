@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, UseGuards } from "@nestjs/common";
 import { CreateUSerDto } from "./dtos/user.dto";
 import { UserService } from "./user.service";
+import { AuthGuard } from "src/auth/auth.guard";
 
 @Controller('user')
 export class UserController{
@@ -11,7 +12,8 @@ export class UserController{
     }
 
     @Get()
-    async getAllUsers(){
+    @UseGuards(AuthGuard)
+    async getAllUsers(@Query('page')page: number, @Query('limit')limit: number ){
         return this.userService.findAllUsers();
     }
 }

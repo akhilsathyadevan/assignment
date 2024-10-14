@@ -16,9 +16,16 @@ async createUser(data: CreateUSerDto):Promise<User>{
     }
 }
 
-async findAllUsers():Promise<User[]>{
-    return this.userModel.find().lean();
-}
+async findAllUsers(page: number = 1, limit: number = 10): Promise<{ users: User[], total: number, totalPages: number }> {
+    const total = await this.userModel.countDocuments();
+      const users = await this.userModel.find()
+      .lean()
+      .skip((page - 1) * limit)  
+      .limit(limit);            
+    const totalPages = Math.ceil(total / limit);
+    return { users, total, totalPages };
+  }
+  
 
 async findOne(username: string, password: string){
     return this.userModel.find({email: username , password: password}).lean();
